@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nullsignal – Clarity Amidst Crypto Noise</title>
+    <style>
+      /*
+        Simple CSS reset and variables.  The colour palette picks up on
+        the dark, high‑contrast look commonly associated with crypto
+        trading platforms.  You can customise the colours below if you
+        receive the official palette from the client.
+      */
+      :root {
+        --background-color: #0c0f16;
+        --primary-color: #f5a623; /* warm golden accent reminiscent of Bybit */
+        --secondary-color: #64ffda; /* fresh teal accent for highlights */
+        --text-color: #e0e0e0;
+        --light-text-color: #9fa6b2;
+        --card-bg: #111827;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 2rem;
+        background-color: rgba(12, 15, 22, 0.9);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.2rem;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: var(--primary-color);
+      }
+
+      .hero {
+        width: 100%;
+        height: 90vh;
+        /*
+          Instead of using an external image for the hero section we
+          generate a subtle gradient.  This avoids embedding any
+          unintended text or branding into the background.  Adjust the
+          colour stops to taste; they should complement the site
+          palette while remaining dark and atmospheric.
+        */
+        background: radial-gradient(
+          circle at 25% 30%,
+          #1a2840 0%,
+          #0c0f16 80%
+        );
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 2rem;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(12,15,22,0.4) 0%, rgba(12,15,22,0.9) 100%);
+        z-index: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+        color: var(--text-color);
+      }
+
+      .hero-content h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        color: var(--light-text-color);
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: #0c0f16;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: #e2991f;
+        transform: translateY(-2px);
+      }
+
+      .section {
+        padding: 4rem 2rem;
+        max-width: 1100px;
+        margin: auto;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background-color: var(--card-bg);
+        padding: 1.5rem;
+        border-radius: 6px;
+        border-top: 3px solid var(--primary-color);
+        transition: transform 0.2s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-4px);
+      }
+
+      .feature-card h3 {
+        margin-bottom: 0.75rem;
+        font-size: 1.4rem;
+        color: var(--primary-color);
+      }
+
+      .feature-card p {
+        font-size: 0.95rem;
+        color: var(--light-text-color);
+      }
+
+      .changelog ul {
+        list-style: none;
+        margin-top: 1rem;
+        padding-left: 0;
+      }
+
+      .changelog li {
+        background-color: var(--card-bg);
+        margin-bottom: 0.8rem;
+        padding: 0.75rem 1rem;
+        border-left: 4px solid var(--secondary-color);
+        border-radius: 4px;
+      }
+
+      .changelog li strong {
+        color: var(--secondary-color);
+      }
+
+      .cta {
+        text-align: center;
+      }
+
+      .performance {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .performance .snapshot {
+        background-color: var(--card-bg);
+        padding: 1.5rem;
+        border-radius: 6px;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .performance .snapshot h4 {
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+      }
+
+      .performance .snapshot p {
+        font-size: 1rem;
+        color: var(--light-text-color);
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        background-color: #0a101b;
+        color: var(--light-text-color);
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 600px) {
+        .hero-content h2 {
+          font-size: 2rem;
+        }
+        .hero-content p {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Nullsignal</h1>
+      <nav>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#performance">Performance</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+          <li><a href="#analysis">Analysis</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Clarity Amidst Crypto Noise</h2>
+        <p>
+          Nullsignal is an algorithmic trading system designed to
+          navigate the chaotic crypto markets.  We turn noisy data
+          into actionable trades that you can automatically copy
+          through your favourite platforms.
+        </p>
+        <a
+          href="https://www.bybit.com/copyTrade/trade-center/detail?leaderMark=1F9xX0kUmFX9Q0YUu4ma9g=="
+          class="btn-primary"
+          target="_blank"
+        >
+          Copy Our Trades on ByBit
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">Why Nullsignal?</h2>
+      <div class="features">
+        <div class="feature-card">
+          <h3>Transparent Development</h3>
+          <p>
+            We openly share our system improvements and strategy
+            evolution.  Follow our changelog and analysis to see how
+            Nullsignal grows over time.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Algorithmic Precision</h3>
+          <p>
+            Our engine uses advanced quantitative models and market
+            signals to find high‑probability trades across major
+            cryptocurrencies.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Plug &amp; Play Copy Trading</h3>
+          <p>
+            Connect to ByBit (and soon other platforms) to mirror
+            every trade we execute automatically.  Adjust your risk
+            level and let Nullsignal do the rest.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Insightful Analysis</h3>
+          <p>
+            Dive into market commentary and post‑mortems of notable
+            trades.  Learn not just what we traded, but why and how
+            it performed.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="performance">
+      <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">30‑Day Performance Snapshot</h2>
+      <div class="performance">
+        <div class="snapshot">
+          <h4>Daily 30d PnL</h4>
+          <p>
+            <strong>Loading…</strong><br />
+            Please check back shortly for our most recent 30‑day
+            performance.  We update this snapshot daily.
+          </p>
+        </div>
+        <p style="color: var(--light-text-color); max-width: 500px; text-align: center;">
+          The data above reflects the cumulative profit and loss
+          achieved by the Nullsignal strategy on ByBit over the last 30
+          days.  Performance may fluctuate with market conditions and
+          is not guaranteed.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="changelog">
+      <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">Changelog</h2>
+      <p style="text-align: center; color: var(--light-text-color);">
+        We believe in radical transparency.  Here are some of the
+        improvements we've recently rolled out.  For a deeper dive
+        into each update, head over to our
+        <a href="#analysis" style="color: var(--secondary-color); text-decoration: underline;">analysis</a> page.
+      </p>
+      <ul>
+        <li>
+          <strong>17&nbsp;Aug&nbsp;2025:</strong> Launched public
+          landing page and planning integration with multiple copy
+          trading platforms.
+        </li>
+        <li>
+          <strong>16&nbsp;Aug&nbsp;2025:</strong> Improved risk
+          management algorithm to adapt position sizing during periods
+          of heightened volatility.
+        </li>
+        <li>
+          <strong>30&nbsp;Jul&nbsp;2025:</strong> Added new momentum
+          indicator that reduces exposure during trend reversals.
+        </li>
+        <li>
+          <strong>15&nbsp;Jul&nbsp;2025:</strong> Completed rigorous
+          backtest on 2 years of historical data with the new
+          strategy, resulting in higher Sharpe ratio.
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" id="analysis">
+      <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">Analysis &amp; Insights</h2>
+      <p style="max-width: 700px; margin: 0 auto; color: var(--light-text-color); text-align: center;">
+        Each week we publish in‑depth write‑ups covering our trading
+        decisions, market outlook, and lessons learned from both
+        winning and losing trades.  These articles live on our
+        dedicated Medium publication.
+      </p>
+      <div class="cta" style="margin-top: 2rem;">
+        <a
+          href="https://medium.com/@nullsignal"
+          class="btn-primary"
+          target="_blank"
+        >
+          Visit Our Medium Blog
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">Stay Connected</h2>
+      <p style="max-width: 700px; margin: 0 auto; color: var(--light-text-color); text-align: center;">
+        For bite‑sized market insights, follow us on X (formerly
+        Twitter).  We post real‑time observations on crypto trends and
+        performance updates.  Join the conversation and share your
+        thoughts with us.
+      </p>
+      <div class="cta" style="margin-top: 2rem;">
+        <a
+          href="https://x.com/nullsignal"
+          class="btn-primary"
+          target="_blank"
+        >
+          Follow Us on X
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Nullsignal.  All rights reserved.</p>
+      <p>
+        This site and trading strategy are for educational purposes
+        only.  Crypto trading involves risk and may result in loss of
+        capital.  Past performance does not guarantee future results.
+      </p>
+    </footer>
+  </body>
+</html>
