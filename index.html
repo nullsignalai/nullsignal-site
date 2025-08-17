@@ -314,19 +314,13 @@
     <section class="section" id="performance">
       <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">30‑Day Performance Snapshot</h2>
       <div class="performance">
-        <div class="snapshot">
-          <h4>Daily 30d PnL</h4>
-          <p>
-            <strong>Loading…</strong><br />
-            Please check back shortly for our most recent 30‑day
-            performance.  We update this snapshot daily.
-          </p>
+        <div class="snapshot" id="pnlChartContainer">
+          <h4 style="margin-bottom: 1rem;">30‑Day PnL Chart</h4>
+          <!-- Canvas for Chart.js to render the PnL chart -->
+          <canvas id="pnlChart" width="400" height="300" style="max-width: 100%;"></canvas>
         </div>
         <p style="color: var(--light-text-color); max-width: 500px; text-align: center;">
-          The data above reflects the cumulative profit and loss
-          achieved by the Nullsignal strategy on ByBit over the last 30
-          days.  Performance may fluctuate with market conditions and
-          is not guaranteed.
+          The chart illustrates the daily cumulative profit and loss achieved by the Nullsignal strategy over the last 30 days.  Values are updated automatically from our copy trading account data when available.  Performance may fluctuate with market conditions and is not guaranteed.
         </p>
       </div>
     </section>
@@ -408,5 +402,76 @@
         capital.  Past performance does not guarantee future results.
       </p>
     </footer>
+
+    <!-- Load Chart.js from a CDN and render the 30‑day PnL chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+      // Fetch PnL data from the JSON file and render the chart
+      fetch('pnl_data.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const ctx = document.getElementById('pnlChart').getContext('2d');
+          const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: data.dates,
+              datasets: [
+                {
+                  label: 'Cumulative PnL',
+                  data: data.pnl,
+                  borderColor: getComputedStyle(document.documentElement).getPropertyValue('--secondary-color') || '#64ffda',
+                  backgroundColor: 'rgba(100, 255, 218, 0.15)',
+                  tension: 0.3,
+                  fill: true
+                }
+              ]
+            },
+            options: {
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: context => {
+                      return `${context.parsed.y}`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--light-text-color') || '#9fa6b2'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                },
+                y: {
+                  ticks: {
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--light-text-color') || '#9fa6b2'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              }
+            }
+          });
+        })
+        .catch(error => {
+          const container = document.getElementById('pnlChartContainer');
+          if (container) {
+            container.innerHTML = '<p style="color: var(--light-text-color);">Unable to load PnL data at this time.</p>';
+          }
+          console.error('Error loading PnL data:', error);
+        });
+    </script>
   </body>
 </html>
